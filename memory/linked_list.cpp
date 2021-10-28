@@ -11,12 +11,17 @@ public:
     Node* next = nullptr;
   };
 
-  ~LinkedList();
+  ~LinkedList() {
+    Node* dummy = head;
+    while(head != nullptr) {
+      head = head->next;
+      delete dummy;
+      dummy = head;
+    }
+  }
 
   void PushFront(const T& value) {
-    Node* new_head;
-    new_head->value = value;
-    new_head->next = head;
+    Node* new_head = new Node{value, head};
     head = new_head;
   }
 
@@ -24,21 +29,21 @@ public:
     if(node == nullptr) {
         PushFront(value);
     } else {
-        auto p = head;
-        while(p != node) {
-            p = runner->next;
-        }
-        auto a = p->next;
-        Node* new_elem;
-        new_elem->value = value;
-        new_elem->next = a;
-        p->next = new_elem;
+        Node* tail = node->next;
+        Node* new_elem = new Node{value, tail};
+        node->next = new_elem;
     }
   }
 
   void RemoveAfter(Node* node) {
-    if(node->next != nullptr) {
-        
+    if(node == nullptr) {
+      PopFront();
+    } else {
+        if(node->next != nullptr) {
+          Node* deleted = node->next;
+          node->next = node->next->next;
+          delete deleted;
+        }
     }
   }
 
